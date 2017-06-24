@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+	config.vm.box = "ubuntu/trusty64"
+	config.vm.network :private_network, ip: "192.168.68.8"
+
+	config.vm.provider "virtualbox" do |vb|
+        vb.gui = true
+        vb.name = "dev_env"
+    end
+
+	config.vm.provision "shell", path: "prov.sh"
+
+	if File.directory?(File.expand_path("../../django_dev_env_template"))
+    	config.vm.synced_folder "../../django_dev_env_template/sample_project", "/home/vagrant/sample_project"
+    	config.vm.synced_folder "../../django_dev_env_template/dev_env/templates", "/home/vagrant/templates"
+  	end
+end
